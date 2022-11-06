@@ -9,3 +9,4 @@
 | R-2R_DAC_timer | Simple R-2R DAC connected to PORTD. TIMER1 (TimerOne library) is used.| ![R-2R_DAC_timer](/images/DAC_timer.jpg)
 | R-2R_DAC_timer_sin | Simple R-2R DAC connected to PORTD for generating sine signal. TIMER1 (TimerOne library) is used.| ![R-2R_DAC_timer_sin](/images/DAC_timer_sin.jpg)|
 | Gamepad | Gamepad on Arduino Pro Micro (Leonardo in Arduino IDE). | ![Gamepad](/images/Gamepad.jpg)|
+| thermometer_for_sauna| DS18B20 and 1602 (I2C) display are used. | ![Thermometer](/images/Thermometer.jpg)|
