@@ -1,13 +1,16 @@
-#include <Wire.h>
+#include <OneWire.h>
 #include <LiquidCrystal_PCF8574.h>
-#include <BigFont01_I2C.h>
-#include <microDS18B20.h>
+#include <BigFont01_I2C.h> // modified
+#include <DallasTemperature.h>
 
 LiquidCrystal_PCF8574 lcd(0x27); //address
 BigFont01_I2C big(&lcd); // construct large font object, passing to it the name of our lcd object
-MicroDS18B20<A0> sensor;
+int backlightPin = 5; // PWM pin for the LCD backlight
 
-int backlightPin = 5;
+#define ONE_WIRE_BUS A0
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensor(&oneWire);
+
 
 void setup()
 {
@@ -21,12 +24,26 @@ void setup()
 
 void loop()
 {
-  sensor.requestTemp();
-  delay(1000);
-  lcd.clear();
-  if (sensor.readTemp()) {
+
+  float tempC = 0;
+
+  bool success = false;
+  int nAttempts = 10;
+  for (int attempt = 0; attempt < nAttempts; attempt++) {
+    sensor.requestTemperatures();
+    tempC = sensor.getTempCByIndex(0);
+    if (tempC != DEVICE_DISCONNECTED_C) {
+      success = true;
+      break;
+    }
+  }
+
+  if (success) {
+
+    lcd.clear();
     analogWrite(backlightPin, 255);
-    int16_t temp = sensor.getTempInt();
+
+    int16_t temp = (int16_t)tempC;
 
     if (temp >= 0) {
 
@@ -54,8 +71,12 @@ void loop()
     }
   } else {
     analogWrite(backlightPin, 10);
+    lcd.clear();
     big.writechar(0, 2, 'O');
     big.writechar(0, 7, 'F');
     big.writechar(0, 12, 'F');
   }
+
+  delay(1000);
+
 }
