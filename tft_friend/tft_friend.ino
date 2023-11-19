@@ -24,9 +24,13 @@ void setup() {
   tft.fillScreen(BLUE);
   tft.setTextSize(2);
   tft.setTextColor(WHITE, BLUE);
-  tft.println("Hello!");
+//  tft.println("Hello, Mark!");
+   Serial.begin(9600);
 }
 
 void loop() {
-
+  if (Serial.available()) {
+    char x = Serial.read();
+    tft.print(x);
+  }
 }
